@@ -63,12 +63,53 @@ In order to compare the model running locally, the model was first deployed at A
 3. All tests I did returned `song_prediction` equals to 0 ...
 4. Example inferences from deployed API: [`rows30-50-result.csv`](rows30-50-result.csv) & [`sample20-result.csv`](sample20-result.csv)
 5. I send all the [test dataset](./kaggle_competition_data/test.csv) and returned al only fourty something one from 10,0...
-6. Looked at the best submission to the competition and the biggest values was `0.4894715` for id `254`. So maybe Azure Classification is going to return zeroes for all values?
+6. Looked at the best submission to the competition and the biggest values was `0.4894715` for id `254`. So maybe Azure Classification. See [`result.csv`](result.csv) is going to return zeroes for all values?
 
 ## Started to train anothe model using Regression
-
-
-
+- Loaded train.csv
+- 5 folds for k-fold cross validation
+- Median imputation for all numerical and `key`
+- By selecting regression, Azure didn't allow to use *AUC* as metric, *Normalized root mean squared error* was set.
+- The best algorithm (0.47759 error) was a *StackEnsemble* with the following details:
+  - Data transformation:
+  ```  
+  {
+    "class_name": "StandardScaler",
+    "module": "sklearn.preprocessing",
+    "param_args": [],
+    "param_kwargs": {
+        "with_mean": false,
+        "with_std": true
+    },
+    "prepared_kwargs": {},
+    "spec_class": "preproc"
+  }
+  ```
+    - Training algorithm:
+  ```
+  {
+    "class_name": "LightGBMRegressor",
+    "module": "automl.client.core.common.model_wrappers",
+    "param_args": [],
+    "param_kwargs": {
+        "boosting_type": "gbdt",
+        "colsample_bytree": 0.8,
+        "learning_rate": 0.02106157894736842,
+        "max_bin": 255,
+        "max_depth": 7,
+        "min_data_in_leaf": 0.008804237587752594,
+        "min_split_gain": 0.5263157894736842,
+        "n_estimators": 100,
+        "num_leaves": 15,
+        "reg_alpha": 0,
+        "reg_lambda": 0,
+        "subsample": 0.3,
+        "subsample_freq": 7
+    },
+    "prepared_kwargs": {},
+    "spec_class": "sklearn"
+  }
+  ```
 
 ## References
 - [Deploy models trained with Azure Machine Learning on your local machines](https://docs.microsoft.com/en-us/azure/machine-learning/how-to-deploy-local#download-and-run-your-model-directly)  
