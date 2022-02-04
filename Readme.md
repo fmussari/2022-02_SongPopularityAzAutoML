@@ -30,7 +30,7 @@ The following libraries were installed:
 `.\2022-02_SongPopularityAzAutoML> pip install azureml-automl-runtime`  
   
 ## Before continuing
-In order to compare the model running locally, the model was first deployed at Azure:
+In order to compare the model running locally, the same model was first deployed at Azure:
 [Use automated machine learning in Azure Machine Learning](https://docs.microsoft.com/en-us/learn/modules/use-automated-machine-learning/7-deploy-model)  
 ```   
 {
@@ -58,7 +58,7 @@ In order to compare the model running locally, the model was first deployed at A
   }
 }
 ``` 
-1. Didn't know how to set null/empty values for testing at Azure ML to work. 
+1. Didn't know how to set null/empty values for testing at Azure ML portal to work. 
 2. Tested endpoint running `endpoint_script.py` with 5 first test values, returning predictions: [0, 0, 0, 0, 0,]
 3. All tests I did returned `song_prediction` equals to 0 ...
 4. Example inferences from deployed API: [`rows30-50-result.csv`](rows30-50-result.csv) & [`sample20-result.csv`](sample20-result.csv)
@@ -109,7 +109,30 @@ In order to compare the model running locally, the model was first deployed at A
     "prepared_kwargs": {},
     "spec_class": "sklearn"
   }
-  ```
+  ```  
+    
+The file [`scoring_file_v_1_0_0.py`](scoring_file_v_1_0_0.py) seems to be designed for the deploying the model onto Azure. When loading `model.pkl`, its type is `<class 'sklearn.pipeline.Pipeline'>`.  It seems that you cannot download the model and deploy where you want.  
+  
+### Deploying the new model and generating a submission
+1. At the portal, going to *Microsoft Azure Machine Learning Studio \> Automated ML* and selecting *song-popularity-autoML-regressor* experiment.
+2. Then, at *Best model summary*, select the algorithm and press *Deploy > Deploy to web service* to deploy it.
+3. Then at the *Endpoints* section you can get the code to consume it.
+
+The endpoint (deployed twice) is giving some `timeout_exception.TimeoutException`... boh. It works when using it in *Test*, but not remote *Consume*. Consume script was tested using local brach and Colab.  
+  
+Then I tried to debug according to this reference [Troubleshooting remote model deployment](https://docs.microsoft.com/en-us/azure/machine-learning/how-to-troubleshoot-deployment):  
+```  
+az extension add --name ml  
+az ml service list  --workspace-name machine-learning-ws  
+
+
+No me funcionaron:  
+az ml dataset list --workspace-name machine-learning-ws --resource-group machine-learning-rg
+
+
+az ml service get-logs --verbose --workspace-name <my workspace name> --name <service name>  
+``` 
+
 
 ## References
 - [Deploy models trained with Azure Machine Learning on your local machines](https://docs.microsoft.com/en-us/azure/machine-learning/how-to-deploy-local#download-and-run-your-model-directly)  
