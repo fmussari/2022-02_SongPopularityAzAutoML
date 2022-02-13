@@ -209,7 +209,11 @@ PS > Scripts\activate.ps1
 (AutoML2f9f8d542103) PS > pip install joblib  
   
 ```  
-
+  
+Definitivamente, por el momento abandoné los intentos de hacer el deploy local o remoto.  
+**BORRÉ EL RESOURCE GROUP `machine-learning-rg`**  
+  
+  
 ## References
 - [Deploy models trained with Azure Machine Learning on your local machines](https://docs.microsoft.com/en-us/azure/machine-learning/how-to-deploy-local#download-and-run-your-model-directly)  
 - [How to use a model trained by Azure AutoML](https://docs.microsoft.com/en-us/answers/questions/297882/how-to-use-a-model-trained-by-azure-automl.html)  
